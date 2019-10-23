@@ -82,18 +82,6 @@ class ZOOM(object):
 
         return json.loads(response.data)
 
-    def _put_resource(self, url, headers, body={}):
-        headers["Content-Type"] = "application/json"
-        headers.update(self._headers())
-
-        response = self.DAO.putURL(url, headers, json.dumps(body))
-
-        if response.status != 200 and response.status != 201:
-            self._log_error(url, response)
-            raise DataFailureException(url, response.status, response.data)
-
-        return json.loads(response.data)
-
     def _delete_resource(self, url):
         response = self.DAO.deleteURL(url, self._headers())
 
