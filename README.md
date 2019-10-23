@@ -1,4 +1,4 @@
-# REST client for the Zoom
+# REST client for Zoom
 
 Installation:
 
