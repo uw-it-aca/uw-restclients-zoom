@@ -60,7 +60,8 @@ class ZOOM(object):
             user.dept = user_data['dept']
             user.verified = user_data['verified']
             user.created_at = dateparser.parse(user_data['created_at'])
-            user.last_login_time = dateparser.parse(user_data['last_login_time'])
+            user.last_login_time = dateparser.parse(
+                user_data['last_login_time'])
             users.append(user)
         return users
 
@@ -71,8 +72,6 @@ class ZOOM(object):
             url += "?action=delete"
         response = self._delete_resource(url)
         return response
-
-
 
     def _get_resource(self, url):
         response = self.DAO.getURL(url, self._headers())

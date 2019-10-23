@@ -33,4 +33,3 @@ class GWSGroupTest(TestCase):
             zoom.delete_user('z8yAAAAA8bbbQ', is_delete=True)
         resp = zoom.delete_user('z8yAAAAA8bbbQ')
         self.assertEqual(resp.status, 200)
-
