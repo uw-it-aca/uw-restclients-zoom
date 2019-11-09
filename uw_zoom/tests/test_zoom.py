@@ -1,13 +1,15 @@
 from unittest import TestCase
 from restclients_core.exceptions import DataFailureException
 from uw_zoom.utilities import fdao_zoom_override
+from uw_zoom.models import ZoomUser
 from uw_zoom import ZOOM
 import datetime
 import pytz
+import mock
 
 
 @fdao_zoom_override
-class GWSGroupTest(TestCase):
+class ZoomAPITest(TestCase):
     def test_request_headers(self):
         zoom = ZOOM()
         self.assertEquals(zoom._headers(), {'Accept': 'application/json'})
@@ -26,6 +28,13 @@ class GWSGroupTest(TestCase):
                                        second=8,
                                        tzinfo=pytz.UTC)
         self.assertEqual(users[0].created_at, created_dt)
+
+    @mock.patch.object(ZOOM, '_patch_resource')
+    def test_update_type(self, mock_patch):
+        zoom = ZOOM()
+        resp = zoom.update_user_type('z8yAAAAA8bbbQ', ZoomUser.TYPE_BASIC)
+        mock_patch.assert_called_with(
+            '/v2/users/z8yAAAAA8bbbQ', {'type': ZoomUser.TYPE_BASIC})
 
     def test_delete_user(self):
         zoom = ZOOM()
