@@ -1,44 +1,25 @@
 from unittest import TestCase
-from restclients_core.exceptions import DataFailureException
-from uw_zoom.utilities import fdao_zoom_override
-from uw_zoom.models import ZoomUser
 from uw_zoom import ZOOM
-import datetime
-import pytz
 import mock
 
 
-@fdao_zoom_override
 class ZoomAPITest(TestCase):
+    @mock.patch.object(ZOOM, '_get_resource')
+    def test_get_paged_resource(self, mock_get):
+        zoom = ZOOM()
+
+        # One page returned
+        mock_get.return_value = {'page_count': 1, 'test': []}
+        resp = zoom._get_paged_resource('/api/test', 'test')
+        mock_get.assert_called_with(
+            '/api/test', {'page_size': zoom.PAGE_SIZE})
+
+        # More than one page returned
+        mock_get.return_value = {'page_count': 2, 'test': []}
+        resp = zoom._get_paged_resource('/api/test', 'test')
+        mock_get.assert_called_with(
+            '/api/test', {'page_size': 300, 'page_number': 2})
+
     def test_request_headers(self):
         zoom = ZOOM()
         self.assertEquals(zoom._headers(), {'Accept': 'application/json'})
-
-    def test_get_users(self):
-        zoom = ZOOM()
-        users = zoom.get_all_users()
-        self.assertEqual(len(users), 2)
-        self.assertEqual(users[0].first_name, "Melina")
-        self.assertEqual(users[1].first_name, "Bill")
-        created_dt = datetime.datetime(year=2018,
-                                       month=11,
-                                       day=15,
-                                       hour=1,
-                                       minute=10,
-                                       second=8,
-                                       tzinfo=pytz.UTC)
-        self.assertEqual(users[0].created_at, created_dt)
-
-    @mock.patch.object(ZOOM, '_patch_resource')
-    def test_update_type(self, mock_patch):
-        zoom = ZOOM()
-        resp = zoom.update_user_type('z8yAAAAA8bbbQ', ZoomUser.TYPE_BASIC)
-        mock_patch.assert_called_with(
-            '/v2/users/z8yAAAAA8bbbQ', {'type': ZoomUser.TYPE_BASIC})
-
-    def test_delete_user(self):
-        zoom = ZOOM()
-        with self.assertRaises(DataFailureException):
-            zoom.delete_user('z8yAAAAA8bbbQ', is_delete=True)
-        resp = zoom.delete_user('z8yAAAAA8bbbQ')
-        self.assertEqual(resp.status, 200)

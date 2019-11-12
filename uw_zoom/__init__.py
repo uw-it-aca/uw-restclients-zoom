@@ -1,38 +1,16 @@
-import json
-import re
 from uw_zoom.dao import ZOOM_DAO
-from uw_zoom.models import ZoomUser
 from restclients_core.exceptions import DataFailureException
 from urllib.parse import urlencode
-
-# max page size 300
-PAGE_SIZE = 300
-USERS_API = '/v2/users'
+import json
 
 
 class ZOOM(object):
     def __init__(self, config={}):
         self.DAO = ZOOM_DAO()
-
-    def get_all_users(self, **kwargs):
-        users = []
-        for user_data in self._get_paged_resource(USERS_API, data_key='users'):
-            users.append(ZoomUser.from_json(user_data))
-        return users
-
-    def update_user_type(self, user_id, type_id):
-        url = '{}/{}'.format(USERS_API, user_id)
-        body = {'type': type_id}
-        return self._patch_resource(url, body)
-
-    def delete_user(self, user_id, is_delete=False):
-        url = '{}/{}'.format(USERS_API, user_id)
-        # default behavior is to disassociate if action isn't passed
-        params = {'action': 'delete'} if is_delete else {}
-        return self._delete_resource(url, params)
+        self.PAGE_SIZE = 300  # max page size = 300
 
     def _get_paged_resource(self, url, data_key):
-        params = {'page_size': PAGE_SIZE}
+        params = {'page_size': self.PAGE_SIZE}
         response = self._get_resource(url, params)
         data = response[data_key]
 
@@ -71,5 +49,5 @@ class ZOOM(object):
         return response
 
     def _headers(self):
-        headers = {"Accept": "application/json"}
+        headers = {'Accept': 'application/json'}
         return headers
