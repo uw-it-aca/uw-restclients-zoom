@@ -1,5 +1,4 @@
 from unittest import TestCase
-from restclients_core.exceptions import DataFailureException
 from uw_zoom.utilities import fdao_zoom_override
 from uw_zoom.models import ZoomUser
 from uw_zoom.users import Users
@@ -32,9 +31,12 @@ class UsersAPITest(TestCase):
         mock_patch.assert_called_with(
             '/v2/users/z8yAAAAA8bbbQ', {'type': ZoomUser.TYPE_BASIC})
 
-    def test_delete_user(self):
+    @mock.patch.object(Users, '_delete_resource')
+    def test_delete_user(self, mock_delete):
         zoom = Users()
-        with self.assertRaises(DataFailureException):
-            zoom.delete_user('z8yAAAAA8bbbQ', is_delete=True)
+        resp = zoom.delete_user('z8yAAAAA8bbbQ', is_delete=True)
+        mock_delete.assert_called_with(
+            '/v2/users/z8yAAAAA8bbbQ', {'action': 'delete'})
+
         resp = zoom.delete_user('z8yAAAAA8bbbQ')
-        self.assertEqual(resp.status, 200)
+        mock_delete.assert_called_with('/v2/users/z8yAAAAA8bbbQ', {})
