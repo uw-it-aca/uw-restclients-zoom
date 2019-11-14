@@ -5,10 +5,10 @@ USERS_API = '/v2/users'
 
 
 class Users(ZOOM):
-    def get_all_users(self, **kwargs):
+    def get_users(self, **kwargs):
         users = []
-        for user_data in self._get_paged_resource(USERS_API, data_key='users'):
-            users.append(ZoomUser.from_json(user_data))
+        for data in self._get_paged_resource(USERS_API, key='users'):
+            users.append(ZoomUser.from_json(data))
         return users
 
     def update_user_type(self, user_id, type_id):

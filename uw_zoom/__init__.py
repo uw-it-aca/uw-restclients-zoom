@@ -9,16 +9,16 @@ class ZOOM(object):
         self.DAO = ZOOM_DAO()
         self.PAGE_SIZE = 300  # max page size = 300
 
-    def _get_paged_resource(self, url, data_key):
+    def _get_paged_resource(self, url, key):
         params = {'page_size': self.PAGE_SIZE}
         response = self._get_resource(url, params)
-        data = response[data_key]
+        data = response[key]
 
         if response.get('page_count', 1) > 1:
             for page_number in range(2, response['page_count'] + 1):
                 params['page_number'] = page_number
                 response = self._get_resource(url, params)
-                data.extend(response[data_key])
+                data.extend(response[key])
         return data
 
     def _get_resource(self, url, params={}):
