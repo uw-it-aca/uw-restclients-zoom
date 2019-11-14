@@ -1,6 +1,6 @@
 from unittest import TestCase
 from uw_zoom.utilities import fdao_zoom_override
-from uw_zoom.models import ZoomAccount
+from uw_zoom.models import ZoomAccount, ZoomUser
 from uw_zoom.accounts import Accounts
 import datetime
 import pytz
@@ -22,3 +22,11 @@ class AccountsAPITest(TestCase):
         zoom = Accounts()
         resp = zoom.get_account_users(account_id='123')
         mock_get.assert_called_with('/v2/accounts/123/users', key='users')
+
+    @mock.patch.object(Accounts, '_patch_resource')
+    def test_update_account_user_type(self, mock_patch):
+        zoom = Accounts()
+        resp = zoom.update_account_user_type(
+            '123', 'z8yAAAAA8bbbQ', ZoomUser.TYPE_BASIC)
+        mock_patch.assert_called_with('/v2/accounts/123/users/z8yAAAAA8bbbQ',
+                                      {'type': ZoomUser.TYPE_BASIC})
