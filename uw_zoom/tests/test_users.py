@@ -11,7 +11,7 @@ import mock
 class UsersAPITest(TestCase):
     def test_get_users(self):
         zoom = Users()
-        users = zoom.get_all_users()
+        users = zoom.get_users()
         self.assertEqual(len(users), 2)
         self.assertEqual(users[0].first_name, "Melina")
         self.assertEqual(users[1].first_name, "Bill")
