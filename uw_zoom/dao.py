@@ -2,7 +2,6 @@
 Contains UW Zoom DAO implementations.
 """
 from restclients_core.dao import DAO
-from commonconf import settings
 from os.path import abspath, dirname
 from time import time
 import jwt

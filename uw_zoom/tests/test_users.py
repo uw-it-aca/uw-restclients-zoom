@@ -24,6 +24,22 @@ class UsersAPITest(TestCase):
                                        tzinfo=pytz.UTC)
         self.assertEqual(users[0].created_at, created_dt)
 
+    def test_get_user_settings(self):
+        zoom = Users()
+        user = zoom.get_user_settings('z8yAAAAA8bbbQ')
+        self.assertEqual(user.id, 'z8yAAAAA8bbbQ')
+        self.assertEqual(user.settings['feature']['large_meeting'], False)
+
+    @mock.patch.object(Users, '_patch_resource')
+    def test_update_user_settings(self, mock_patch):
+        zoom = Users()
+        user = zoom.get_user_settings('z8yAAAAA8bbbQ')
+        user.settings['feature']['large_meeting'] = True
+        user.settings['feature']['meeting_capacity'] = 500
+        resp = zoom.update_user_settings('z8yAAAAA8bbbQ', user.settings)
+        mock_patch.assert_called_with(
+            '/v2/users/z8yAAAAA8bbbQ/settings', user.settings)
+
     @mock.patch.object(Users, '_patch_resource')
     def test_update_type(self, mock_patch):
         zoom = Users()
