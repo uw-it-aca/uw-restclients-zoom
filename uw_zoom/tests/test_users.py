@@ -26,19 +26,19 @@ class UsersAPITest(TestCase):
 
     def test_get_user_settings(self):
         zoom = Users()
-        user = zoom.get_user_settings('z8yAAAAA8bbbQ')
-        self.assertEqual(user.id, 'z8yAAAAA8bbbQ')
-        self.assertEqual(user.settings['feature']['large_meeting'], False)
+        settings = zoom.get_user_settings('z8yAAAAA8bbbQ')
+        self.assertEqual(settings['feature']['large_meeting'], False)
+        self.assertEqual(settings['feature']['meeting_capacity'], 100)
 
     @mock.patch.object(Users, '_patch_resource')
     def test_update_user_settings(self, mock_patch):
         zoom = Users()
-        user = zoom.get_user_settings('z8yAAAAA8bbbQ')
-        user.settings['feature']['large_meeting'] = True
-        user.settings['feature']['meeting_capacity'] = 500
-        resp = zoom.update_user_settings('z8yAAAAA8bbbQ', user.settings)
+        settings = zoom.get_user_settings('z8yAAAAA8bbbQ')
+        settings['feature']['large_meeting'] = True
+        settings['feature']['meeting_capacity'] = 500
+        resp = zoom.update_user_settings('z8yAAAAA8bbbQ', settings)
         mock_patch.assert_called_with(
-            '/v2/users/z8yAAAAA8bbbQ/settings', user.settings)
+            '/v2/users/z8yAAAAA8bbbQ/settings', settings)
 
     @mock.patch.object(Users, '_patch_resource')
     def test_update_type(self, mock_patch):

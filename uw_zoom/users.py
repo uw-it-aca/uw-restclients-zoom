@@ -18,7 +18,7 @@ class Users(ZOOM):
 
     def get_user_settings(self, user_id):
         url = '{}/{}/settings'.format(USERS_API, user_id)
-        return ZoomUser(id=user_id, settings=self._get_resource(url))
+        return self._get_resource(url)
 
     def update_user_settings(self, user_id, settings={}):
         url = '{}/{}/settings'.format(USERS_API, user_id)

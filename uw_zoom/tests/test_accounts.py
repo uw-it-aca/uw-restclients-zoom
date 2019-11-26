@@ -30,3 +30,19 @@ class AccountsAPITest(TestCase):
             '123', 'z8yAAAAA8bbbQ', ZoomUser.TYPE_BASIC)
         mock_patch.assert_called_with('/v2/accounts/123/users/z8yAAAAA8bbbQ',
                                       {'type': ZoomUser.TYPE_BASIC})
+
+    @mock.patch.object(Accounts, '_get_resource')
+    def test_get_account_user_settings(self, mock_get):
+        zoom = Accounts()
+        resp = zoom.get_account_user_settings('123', 'z8yAAAAA8bbbQ')
+        mock_get.assert_called_with(
+            '/v2/accounts/123/users/z8yAAAAA8bbbQ/settings')
+
+    @mock.patch.object(Accounts, '_patch_resource')
+    def test_patch_account_user_settings(self, mock_patch):
+        zoom = Accounts()
+        resp = zoom.update_account_user_settings(
+            '123', 'z8yAAAAA8bbbQ', {'abc': True})
+        mock_patch.assert_called_with(
+            '/v2/accounts/123/users/z8yAAAAA8bbbQ/settings',
+            {'abc': True})
