@@ -16,6 +16,14 @@ class Users(ZOOM):
         body = {'type': type_id}
         return self._patch_resource(url, body)
 
+    def get_user_settings(self, user_id):
+        url = '{}/{}/settings'.format(USERS_API, user_id)
+        return ZoomUser(id=user_id, settings=self._get_resource(url))
+
+    def update_user_settings(self, user_id, settings={}):
+        url = '{}/{}/settings'.format(USERS_API, user_id)
+        return self._patch_resource(url, settings)
+
     def delete_user(self, user_id, is_delete=False):
         url = '{}/{}'.format(USERS_API, user_id)
         # default behavior is to disassociate if action isn't passed

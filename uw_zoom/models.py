@@ -64,6 +64,7 @@ class ZoomUser(models.Model):
         user.dept = data.get('dept')
         user.verified = data['verified']
         user.created_at = parse(data['created_at'])
+        user.settings = data.get('settings')
         if 'last_login_time' in data:
             user.last_login_time = parse(data['last_login_time'])
         return user
