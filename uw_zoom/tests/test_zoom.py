@@ -56,7 +56,10 @@ class ZoomAPITest(TestCase):
         mock_patch.return_value = self.success_response
         resp = zoom._patch_resource('/api/test', body={'Test': True})
         mock_patch.assert_called_with(
-            '/api/test', {'Test': True}, {'Accept': 'application/json'})
+            '/api/test', {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'},
+            '{"Test": true}')
 
         mock_patch.return_value = self.error_response
         self.assertRaises(

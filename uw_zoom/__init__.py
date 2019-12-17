@@ -32,7 +32,9 @@ class ZOOM(object):
         return json.loads(response.data)
 
     def _patch_resource(self, url, body):
-        response = self.DAO.patchURL(url, body, self._headers())
+        headers = self._headers()
+        headers['Content-Type'] = 'application/json'
+        response = self.DAO.patchURL(url, headers, json.dumps(body))
 
         if response.status != 200:
             raise DataFailureException(url, response.status, response.data)
