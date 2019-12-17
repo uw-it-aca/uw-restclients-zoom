@@ -8,9 +8,13 @@ import mock
 
 class ZoomAPITest(TestCase):
     def setUp(self):
-        self.success_response = MockHTTP()
-        self.success_response.status = 200
-        self.success_response.data = b'{}'
+        self.get_success_response = MockHTTP()
+        self.get_success_response.status = 200
+        self.get_success_response.data = b'{}'
+
+        self.del_success_response = MockHTTP()
+        self.del_success_response.status = 204
+        self.del_success_response.data = b''
 
         self.error_response = MockHTTP()
         self.error_response.status = 404
@@ -36,7 +40,7 @@ class ZoomAPITest(TestCase):
     def test_get_resource(self, mock_get):
         zoom = ZOOM()
 
-        mock_get.return_value = self.success_response
+        mock_get.return_value = self.get_success_response
         resp = zoom._get_resource('/api/test')
         mock_get.assert_called_with(
             '/api/test', {'Accept': 'application/json'})
@@ -53,7 +57,7 @@ class ZoomAPITest(TestCase):
     def test_patch_resource(self, mock_patch):
         zoom = ZOOM()
 
-        mock_patch.return_value = self.success_response
+        mock_patch.return_value = self.del_success_response
         resp = zoom._patch_resource('/api/test', body={'Test': True})
         mock_patch.assert_called_with(
             '/api/test', {
@@ -69,7 +73,7 @@ class ZoomAPITest(TestCase):
     def test_delete_resource(self, mock_delete):
         zoom = ZOOM()
 
-        mock_delete.return_value = self.success_response
+        mock_delete.return_value = self.del_success_response
         resp = zoom._delete_resource('/api/test')
         mock_delete.assert_called_with(
             '/api/test', {'Accept': 'application/json'})
