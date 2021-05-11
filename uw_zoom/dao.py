@@ -1,3 +1,6 @@
+# Copyright 2021 UW-IT, University of Washington
+# SPDX-License-Identifier: Apache-2.0
+
 """
 Contains UW Zoom DAO implementations.
 """
@@ -26,4 +29,4 @@ class ZOOM_DAO(DAO):
 
     def _custom_headers(self, method, url, headers, body):
         token = self._generate_jwt()
-        return {'Authorization': 'Bearer {}'.format(token.decode())}
+        return {'Authorization': 'Bearer {}'.format(token)}
