@@ -1,3 +1,6 @@
+# Copyright 2021 UW-IT, University of Washington
+# SPDX-License-Identifier: Apache-2.0
+
 from uw_zoom.dao import ZOOM_DAO
 from restclients_core.exceptions import DataFailureException
 from urllib.parse import urlencode
