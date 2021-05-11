@@ -29,4 +29,4 @@ class ZOOM_DAO(DAO):
 
     def _custom_headers(self, method, url, headers, body):
         token = self._generate_jwt()
-        return {'Authorization': 'Bearer {}'.format(token.decode())}
+        return {'Authorization': 'Bearer {}'.format(token)}
